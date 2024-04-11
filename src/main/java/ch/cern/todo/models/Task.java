@@ -3,7 +3,7 @@ package ch.cern.todo.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TASK")
@@ -27,7 +27,7 @@ public class Task {
     private String description;
 
     @Column(name = "DEADLINE")
-    private Instant deadline;
+    private LocalDateTime deadline;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "TASK+CATEGORIES_FK"))
