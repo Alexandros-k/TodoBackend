@@ -28,7 +28,7 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @PostMapping
+    @PostMapping("")
     ResponseEntity<Task> post(@Valid @RequestBody Task task) {
         //todo task category id should not be provided might use DTO
         //task.setId(null);//todo maybe delete this

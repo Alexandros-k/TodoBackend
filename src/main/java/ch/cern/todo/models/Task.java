@@ -1,9 +1,10 @@
 package ch.cern.todo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "TASK")
@@ -27,9 +28,10 @@ public class Task {
     private String description;
 
     @Column(name = "DEADLINE")
-    private LocalDateTime deadline;
+    private Instant deadline;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "TASK+CATEGORIES_FK"))
+    @JsonIgnore
     private TaskCategory category;
 }

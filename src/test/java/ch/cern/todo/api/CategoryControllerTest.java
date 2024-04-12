@@ -1,5 +1,6 @@
 package ch.cern.todo.api;
 
+import ch.cern.todo.models.Task;
 import ch.cern.todo.models.TaskCategory;
 import ch.cern.todo.services.TaskCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,17 +13,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -32,11 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureJsonTesters
 public class CategoryControllerTest {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Autowired
     private JacksonTester<TaskCategory> json;
@@ -44,12 +48,8 @@ public class CategoryControllerTest {
     @MockBean
     private TaskCategoryService taskCategoryService;
 
-
     TaskCategory taskCategory;
 
-    /**
-     * Creates pre-requisites for testing, such as an example TaskCategory.
-     */
     @BeforeEach
     public void setup() {
         taskCategory = getTaskCategory();
@@ -59,42 +59,27 @@ public class CategoryControllerTest {
         given(taskCategoryService.findAll()).willReturn(Collections.singletonList(taskCategory));
     }
 
-    /**
-     * Tests for successful creation of new TaskCategory in the system
-     *
-     * @throws Exception when TaskCategory creation fails in the system
-     */
     @Test
     public void createTaskCategory() throws Exception {
         mvc.perform(post(new URI("/taskCategory"))
                         .content(json.write(taskCategory).getJson())
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
-    /**
-     * Tests if the read operation appropriately returns a list of TaskCategories.
-     *
-     * @throws Exception if the read operation of the TaskCategories list fails
-     */
-    @Test
-    public void listCars() throws Exception {
 
+    @Test
+    public void listCategoryTasks() throws Exception {
         mvc.perform(get("/taskCategory")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        // .andExpect(jsonPath("$._embedded.taskCategoryList.size()", is(1)));
+                //.andExpect(jsonPath("$.size()", is(1)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].tasks.size()", is(1)));
     }
 
-    /**
-     * Tests the read operation for a single TaskCategory by ID.
-     *
-     * @throws Exception if the read operation for a single TaskCategory fails
-     */
     @Test
     public void findTaskCategory() throws Exception {
-
         mvc.perform(get("/taskCategory/{id}", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -104,35 +89,29 @@ public class CategoryControllerTest {
     @Test
     public void updateTaskCategory() throws Exception {
         taskCategory.setName("superMarket");
-        String json = new ObjectMapper().writeValueAsString(taskCategory);
+        String json = objectMapper.writeValueAsString(taskCategory);
         mvc.perform(put(new URI("/taskCategory/1"))
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());
-
     }
 
-    /**
-     * Tests the deletion of a single TaskCategory by ID.
-     *
-     * @throws Exception if the delete operation of a TaskCategory fails
-     */
     @Test
     public void deleteTaskCategory() throws Exception {
-
         mvc.perform(
                         delete("/taskCategory/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
-    /**
-     * Creates an example TaskCategory object for use in testing.
-     *
-     * @return an example TaskCategory object
-     */
     private TaskCategory getTaskCategory() {
-        TaskCategory tk = new TaskCategory(1L, "groceries", "list of groceries");
+        Task task = new Task();
+        task.setName("groceries");
+        task.setDeadline(Instant.ofEpochSecond(01012000));
+        task.setDescription("list of groceries");
+        List<Task> tasks = List.of(task);
+        TaskCategory tk = new TaskCategory(null, "groceries", "list of groceries", tasks);
+        task.setCategory(tk);
         return tk;
     }
 }
