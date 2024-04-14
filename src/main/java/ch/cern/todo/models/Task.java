@@ -1,6 +1,6 @@
 package ch.cern.todo.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,8 +30,8 @@ public class Task {
     @Column(name = "DEADLINE")
     private Instant deadline;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "TASK+CATEGORIES_FK"))
-    @JsonIgnore
+    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "TASK_CATEGORIES_FK"))
     private TaskCategory category;
 }

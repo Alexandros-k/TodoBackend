@@ -3,6 +3,7 @@ package ch.cern.todo.services;
 import ch.cern.todo.models.TaskCategory;
 import ch.cern.todo.repositories.TaskCategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TaskCategoryService {
 

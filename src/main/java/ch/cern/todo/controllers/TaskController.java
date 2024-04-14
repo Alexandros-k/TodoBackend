@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/task")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TaskController {
     @Autowired
     TaskService taskService;
@@ -37,8 +38,8 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Task> put(@PathVariable Long id, @Valid @RequestBody Task task) {
-        Task savedEntity = taskService.save(task);
+    ResponseEntity<Task> put(@PathVariable Long id, @RequestBody Task task) {
+        Task savedEntity = taskService.updateTask(id, task);
         return ResponseEntity.ok(savedEntity);
     }
 
