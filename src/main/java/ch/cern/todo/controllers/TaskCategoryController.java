@@ -33,14 +33,14 @@ public class TaskCategoryController {
     @PostMapping("")
     ResponseEntity<TaskCategory> post(@Valid @RequestBody TaskCategory taskCategory) {
         //todo task category id should not be provided might use DTO
-        //taskCategory.setId(null);//todo maybe delete this
+        taskCategory.setId(null);//todo maybe delete this
         taskCategoryService.save(taskCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskCategory);
     }
 
     @PutMapping("/{id}")
     ResponseEntity<TaskCategory> put(@PathVariable Long id, @Valid @RequestBody TaskCategory taskCategory) {
-        TaskCategory savedEntity = taskCategoryService.save(taskCategory);
+        TaskCategory savedEntity = taskCategoryService.updateTaskCategory(id, taskCategory);
         return ResponseEntity.ok(savedEntity);
     }
 

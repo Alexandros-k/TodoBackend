@@ -1,5 +1,6 @@
 package ch.cern.todo.services;
 
+import ch.cern.todo.models.Task;
 import ch.cern.todo.models.TaskCategory;
 import ch.cern.todo.repositories.TaskCategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,16 +30,18 @@ public class TaskCategoryService {
     }
 
     public TaskCategory save(TaskCategory taskCategory) {
-        if (taskCategory.getId() != null) {
-            return taskCategoryRepository.findById(taskCategory.getId())
-                    .map(taskCategoryToBeUpdated -> {
-                        taskCategoryToBeUpdated.setDescription(taskCategory.getDescription());
-                        taskCategoryToBeUpdated.setName(taskCategory.getName());
-                        return taskCategoryRepository.save(taskCategoryToBeUpdated);
-                    }).orElseThrow(EntityNotFoundException::new);
-        }
         return taskCategoryRepository.save(taskCategory);
     }
+
+    public TaskCategory updateTaskCategory(Long id, TaskCategory taskCategory) {
+        return taskCategoryRepository.findById(id)
+                .map(taskToBeUpdated -> {
+                    taskToBeUpdated.setDescription(taskCategory.getDescription());
+                    taskToBeUpdated.setName(taskCategory.getName());
+                    return taskCategoryRepository.save(taskToBeUpdated);
+                }).orElseThrow(EntityNotFoundException::new);
+    }
+
 
     public void delete(Long id) {
         TaskCategory taskCategory = taskCategoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
