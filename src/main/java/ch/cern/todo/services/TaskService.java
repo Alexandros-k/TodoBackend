@@ -17,7 +17,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskService {
 
-
     private final TaskRepository taskRepository;
 
     private final TaskCategoryRepository taskCategoryRepository;

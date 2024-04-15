@@ -31,8 +31,6 @@ public class TaskController {
 
     @PostMapping("")
     ResponseEntity<Task> post(@Valid @RequestBody Task task) {
-        //todo task category id should not be provided might use DTO
-        //task.setId(null);//todo maybe delete this
         taskService.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(task);
     }
@@ -48,5 +46,4 @@ public class TaskController {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }

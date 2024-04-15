@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//Todo put javadoc
 @RestController
 @RequestMapping("/taskCategory")
 @CrossOrigin(origins = "http://localhost:4200")

@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 public class CategoryControllerTest {
-
     @Autowired
     private MockMvc mvc;
 

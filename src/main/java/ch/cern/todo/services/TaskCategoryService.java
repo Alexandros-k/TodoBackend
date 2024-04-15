@@ -42,7 +42,6 @@ public class TaskCategoryService {
                 }).orElseThrow(EntityNotFoundException::new);
     }
 
-
     public void delete(Long id) {
         TaskCategory taskCategory = taskCategoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         taskCategoryRepository.delete(taskCategory);

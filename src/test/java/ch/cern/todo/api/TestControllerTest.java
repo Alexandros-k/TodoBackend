@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureJsonTesters
 public class TestControllerTest {
 
-
     @Autowired
     private MockMvc mvc;
 
@@ -47,7 +46,6 @@ public class TestControllerTest {
 
     @MockBean
     private TaskService taskService;
-
 
     Task task;
 
@@ -69,7 +67,6 @@ public class TestControllerTest {
                 .andExpect(status().isCreated());
     }
 
-
     @Test
     public void listTasks() throws Exception {
         mvc.perform(get(new URI("/task"))
@@ -78,14 +75,12 @@ public class TestControllerTest {
                 .andExpect(jsonPath("$.size()", is(1)));
     }
 
-
     @Test
     public void findTask() throws Exception {
         mvc.perform(get("/task/{id}", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
-
 
     @Test
     public void updateTask() throws Exception {
@@ -95,7 +90,6 @@ public class TestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());
-
     }
 
     @Test
